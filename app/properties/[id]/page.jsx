@@ -1,9 +1,15 @@
-'use client'
-import * as React from 'react'
+import connectDB from '@/config/database';
+import Property from '@/models/Property';
 
-const PropertyPage = ({ params }) => {
-    // asynchronous access of `params.id`.
-  const { id } = React.use(params)
-    return <div>Property Page {id}</div>;
+
+const PropertyPage = async ({ params }) => {
+  const resolvedParams = await Promise.resolve(params); // makes sure it's awaited
+
+  await connectDB();
+
+  const property = await Property.findById(resolvedParams.id).lean();
+
+  return <section>{property.name}</section>;
 };
+
 export default PropertyPage;
